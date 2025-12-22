@@ -1,14 +1,15 @@
-import { Button, Card, Form, Input, Typography, Space, message } from 'antd'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth'
 import { isApiError } from '@/services/request'
+import { App, Button, Card, Form, Input, Space, Typography } from 'antd'
 
 export function Login() {
   const navigate = useNavigate()
   const login = useAuthStore((s) => s.login)
   const { t } = useTranslation()
+  const { message } = App.useApp()
   const [submitting, setSubmitting] = useState(false)
 
   return (
@@ -23,7 +24,7 @@ export function Login() {
       }}
     >
       <Card style={{ width: 360 }} variant="outlined">
-        <Space orientation="vertical" size={12} style={{ width: '100%' }}>
+        <Space direction="vertical" size={12} style={{ width: '100%' }}>
           <Typography.Title level={3} style={{ margin: 0 }}>
             {t('login.title')}
           </Typography.Title>
@@ -42,11 +43,10 @@ export function Login() {
               navigate('/dashboard', { replace: true })
             } catch (e) {
               const apiErr = isApiError(e) ? e : null
-              const msg = apiErr?.message || (e instanceof Error ? e.message : '')
               if (apiErr?.code === 'invalid_credentials') {
                 message.error('用户名或密码错误')
               } else {
-                message.error(msg || '登录失败')
+                message.error(apiErr?.message || '登录失败')
               }
             } finally {
               setSubmitting(false)
