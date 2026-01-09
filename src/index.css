@@ -1,1 +1,2 @@
-@import 'normalize.css'; /* 样式初始化 */
+@import 'normalize.css';
+@import './styles/app.css';
